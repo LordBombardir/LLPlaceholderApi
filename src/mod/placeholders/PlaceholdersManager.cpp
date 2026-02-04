@@ -1,7 +1,9 @@
 #include "PlaceholdersManager.h"
-#include "../../utils/Utils.h"
-#include "../MainManager.h"
 #include "../config/ConfigManager.h"
+#include "../config/types/Config.h"
+#include "../core/MainManager.h"
+#include "../utils/Utils.h"
+
 #include <ll/api/service/Bedrock.h>
 #include <mc/certificates/WebToken.h>
 #include <mc/entity/components/SynchedActorDataComponent.h>
@@ -36,7 +38,7 @@ ToastRequestPacketPayload::ToastRequestPacketPayload(const ToastRequestPacketPay
 
 SetActorDataPacket::SetActorDataPacket() = default;
 
-namespace placeholder::manager {
+namespace placeholder {
 
 static constexpr short timeRemained = 60;
 
@@ -480,4 +482,4 @@ void PlaceholdersManager::replaceAllPlaceholders(
     }
 }
 
-} // namespace placeholder::manager
+} // namespace placeholder

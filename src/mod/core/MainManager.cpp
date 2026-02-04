@@ -1,9 +1,13 @@
 #include "MainManager.h"
-#include "config/ConfigManager.h"
-#include "placeholders/PlaceholdersManager.h"
+#include "../config/ConfigManager.h"
+#include "../config/types/Config.h"
+#include "../hooks/Hooks.h"
+#include "../placeholders/PlaceholdersManager.h"
+#include "../tasks/CacheCleanerTask.h"
+
 #include <ll/api/utils/HashUtils.h>
 
-namespace placeholder::manager {
+namespace placeholder {
 
 static constexpr short timeRemained = 60;
 
@@ -14,9 +18,28 @@ std::unordered_map<std::string, std::unordered_map<std::string, MainManager::Tem
 
 std::recursive_mutex MainManager::temporaryPlaceholdersMutex;
 
-bool MainManager::initManagers(ll::mod::NativeMod& mod) { return ConfigManager::init(mod); }
+bool MainManager::initModWhileLoading(ll::mod::NativeMod& mod) {
+    if (!ConfigManager::init(mod)) {
+        mod.getLogger().error("Failed to init ConfigManager!");
+        return false;
+    }
 
-void MainManager::disposeManagers() {
+    Hooks::setup();
+    return true;
+}
+
+bool MainManager::initModWhileEnabling([[maybe_unused]] ll::mod::NativeMod& mod) {
+    if (!CacheCleanerTask::enable()) {
+        mod.getLogger().error("Failed to init CacheCleanerTask!");
+        return false;
+    }
+
+    return true;
+}
+
+void MainManager::disableMod() {
+    CacheCleanerTask::disable();
+
     PlaceholdersManager::cleanPackets(true);
     cleanTemporaryPlaceholders(true);
 }
@@ -152,4 +175,4 @@ std::string MainManager::generateKey(size_t length) {
     return result;
 }
 
-} // namespace placeholder::manager
+} // namespace placeholder

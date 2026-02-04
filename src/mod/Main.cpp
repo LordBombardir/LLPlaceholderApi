@@ -1,7 +1,6 @@
 #include "Main.h"
-#include "hooks/Hooks.h"
-#include "manager/MainManager.h"
-#include "tasks/CacheCleanerTask.h"
+#include "core/MainManager.h"
+
 #include <ll/api/mod/RegisterHelper.h>
 
 namespace placeholder {
@@ -14,12 +13,10 @@ Main& Main::getInstance() {
 bool Main::load() {
     getSelf().getLogger().info("The mod is loading...");
 
-    if (!manager::MainManager::initManagers(getSelf())) {
-        getSelf().getLogger().info("Failed to load the mod!");
+    if (!MainManager::initModWhileLoading(getSelf())) {
+        getSelf().getLogger().error("Failed to initialize the mod during loading!");
         return false;
     }
-
-    hooks::setupHooks();
 
     getSelf().getLogger().info("The mod has been successfully loaded!");
     return true;
@@ -28,8 +25,8 @@ bool Main::load() {
 bool Main::enable() {
     getSelf().getLogger().info("The mod is enabling...");
 
-    if (!tasks::CacheCleanerTask::init()) {
-        getSelf().getLogger().info("Failed to enable the mod!");
+    if (!MainManager::initModWhileEnabling(getSelf())) {
+        getSelf().getLogger().error("Failed to initialize the mod during enabling!");
         return false;
     }
 
@@ -42,7 +39,7 @@ bool Main::enable() {
 bool Main::disable() {
     getSelf().getLogger().info("The mod is disabling...");
 
-    manager::MainManager::disposeManagers();
+    MainManager::disableMod();
 
     getSelf().getLogger().info("The mod has been successfully disabled.");
     return true;

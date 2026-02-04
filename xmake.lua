@@ -50,6 +50,6 @@ target("PlaceholderApi") -- Change this to your mod name.
         os.mkdir(includeDirectory)
         os.mkdir(libDirectory)
 
-        os.cp(path.join(os.projectdir(), "src", "mod", "Api.h"), includeDirectory)
+        os.cp(path.join(os.projectdir(), "src", "mod", "core", "Api.h"), includeDirectory)
         os.cp(path.join(target:targetdir(), "PlaceholderApi.lib"), libDirectory)
     end)

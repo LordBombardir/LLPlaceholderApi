@@ -1,23 +1,24 @@
 #include "CacheCleanerTask.h"
-#include "../manager/MainManager.h"
-#include "../manager/placeholders/PlaceholdersManager.h"
+#include "../core/MainManager.h"
+#include "../placeholders/PlaceholdersManager.h"
+
 #include <ll/api/coro/CoroTask.h>
 #include <ll/api/thread/ServerThreadExecutor.h>
 
-namespace placeholder::tasks {
+namespace placeholder {
 
 bool CacheCleanerTask::isStarted = false;
 
 std::function<void()> CacheCleanerTask::function = {};
 
-bool CacheCleanerTask::init() {
+bool CacheCleanerTask::enable() {
     if (isStarted) {
         return false;
     }
 
     function = []() -> void {
-        manager::PlaceholdersManager::cleanPackets();
-        manager::MainManager::cleanTemporaryPlaceholders();
+        PlaceholdersManager::cleanPackets();
+        MainManager::cleanTemporaryPlaceholders();
     };
 
     using namespace std::chrono_literals;
@@ -33,6 +34,9 @@ bool CacheCleanerTask::init() {
     return true;
 }
 
-bool CacheCleanerTask::isAlreadyStarted() { return isStarted; }
+void CacheCleanerTask::disable() {
+    isStarted = false;
+    function  = {};
+}
 
-} // namespace placeholder::tasks
+} // namespace placeholder

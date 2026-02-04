@@ -1,7 +1,10 @@
 #pragma once
 
-namespace placeholder::hooks {
+namespace placeholder {
 
-void setupHooks();
+class Hooks final {
+public:
+    static void setup();
+};
 
-} // namespace placeholder::hooks
+} // namespace placeholder

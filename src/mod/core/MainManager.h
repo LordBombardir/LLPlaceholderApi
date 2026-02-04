@@ -5,12 +5,14 @@
 #include <string>
 #include <unordered_map>
 
-namespace placeholder::manager {
+namespace placeholder {
 
 class MainManager final {
 public:
-    static bool initManagers(ll::mod::NativeMod& mod);
-    static void disposeManagers();
+    static bool initModWhileLoading(ll::mod::NativeMod& mod);
+    static bool initModWhileEnabling(ll::mod::NativeMod& mod);
+
+    static void disableMod();
 
     static void        cleanTemporaryPlaceholders(bool forced = false);
     static std::string getPrefixScope();
@@ -77,4 +79,4 @@ private:
     }
 };
 
-} // namespace placeholder::manager
+} // namespace placeholder

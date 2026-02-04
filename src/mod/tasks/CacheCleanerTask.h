@@ -2,12 +2,12 @@
 
 #include <functional>
 
-namespace placeholder::tasks {
+namespace placeholder {
 
 class CacheCleanerTask final {
 public:
-    static bool init();
-    static bool isAlreadyStarted();
+    static bool enable();
+    static void disable();
 
 private:
     static bool isStarted;
@@ -15,4 +15,4 @@ private:
     static std::function<void()> function;
 };
 
-} // namespace regions::tasks
+} // namespace placeholder
